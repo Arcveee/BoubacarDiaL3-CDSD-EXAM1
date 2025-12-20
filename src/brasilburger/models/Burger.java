@@ -9,17 +9,6 @@ public class Burger {
     private String image;
     private boolean actif;
 
-    public Burger() {
-    }
-
-    public Burger(int idBurger, String nom, BigDecimal prix, String image, boolean actif) {
-        this.idBurger = idBurger;
-        this.nom = nom;
-        this.prix = prix;
-        this.image = image;
-        this.actif = actif;
-    }
-
     public int getIdBurger() {
         return idBurger;
     }
@@ -60,4 +49,5 @@ public class Burger {
         this.actif = actif;
     }
 }
+
 

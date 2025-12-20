@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:postgresql://<host>/<database>";
-    private static final String USERNAME = "<username>";
-    private static final String PASSWORD = "<password>";
+    private static final String URL = "jdbc:postgresql://ep-long-shadow-a8gibx5f-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require";
+    private static final String USERNAME = "neondb_owner";
+    private static final String PASSWORD = "npg_NKMDBu4Zn3Ik";
 
     public static Connection getConnection() {
         try {
@@ -17,4 +17,3 @@ public class DatabaseConnection {
         }
     }
 }
-

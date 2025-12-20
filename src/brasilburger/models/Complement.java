@@ -9,17 +9,6 @@ public class Complement {
     private String image;
     private boolean actif;
 
-    public Complement() {
-    }
-
-    public Complement(int idComplement, String nom, BigDecimal prix, String image, boolean actif) {
-        this.idComplement = idComplement;
-        this.nom = nom;
-        this.prix = prix;
-        this.image = image;
-        this.actif = actif;
-    }
-
     public int getIdComplement() {
         return idComplement;
     }
@@ -60,4 +49,5 @@ public class Complement {
         this.actif = actif;
     }
 }
+
 

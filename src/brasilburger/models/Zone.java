@@ -10,15 +10,6 @@ public class Zone {
     private BigDecimal prixLivraison;
     private List<Quartier> quartiers = new ArrayList<>();
 
-    public Zone() {
-    }
-
-    public Zone(int idZone, String nom, BigDecimal prixLivraison) {
-        this.idZone = idZone;
-        this.nom = nom;
-        this.prixLivraison = prixLivraison;
-    }
-
     public int getIdZone() {
         return idZone;
     }
@@ -51,4 +42,5 @@ public class Zone {
         this.quartiers = quartiers;
     }
 }
+
 

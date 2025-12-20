@@ -5,15 +5,6 @@ public class Quartier {
     private String nom;
     private Zone zone;
 
-    public Quartier() {
-    }
-
-    public Quartier(int idQuartier, String nom, Zone zone) {
-        this.idQuartier = idQuartier;
-        this.nom = nom;
-        this.zone = zone;
-    }
-
     public int getIdQuartier() {
         return idQuartier;
     }
@@ -38,4 +29,5 @@ public class Quartier {
         this.zone = zone;
     }
 }
+
 

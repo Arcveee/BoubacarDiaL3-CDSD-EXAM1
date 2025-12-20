@@ -5,15 +5,6 @@ public class Gestionnaire {
     private String login;
     private String password;
 
-    public Gestionnaire() {
-    }
-
-    public Gestionnaire(int idGestionnaire, String login, String password) {
-        this.idGestionnaire = idGestionnaire;
-        this.login = login;
-        this.password = password;
-    }
-
     public int getIdGestionnaire() {
         return idGestionnaire;
     }
@@ -38,4 +29,5 @@ public class Gestionnaire {
         this.password = password;
     }
 }
+
 

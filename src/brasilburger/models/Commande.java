@@ -1,11 +1,12 @@
 package brasilburger.models;
 
+import brasilburger.models.enums.EtatCommande;
+import brasilburger.models.enums.ModeConsommation;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import brasilburger.models.enums.EtatCommande;
-import brasilburger.models.enums.ModeConsommation;
 
 public class Commande {
     private int idCommande;
@@ -17,20 +18,6 @@ public class Commande {
     private Client client;
     private Zone zone;
     private List<LigneCommande> lignes = new ArrayList<>();
-    private Paiement paiement;
-
-    public Commande() {
-    }
-
-    public Commande(int idCommande, LocalDateTime dateCommande, String adresseLivraison, ModeConsommation modeConsommation, EtatCommande etatCommande, Client client, Zone zone) {
-        this.idCommande = idCommande;
-        this.dateCommande = dateCommande;
-        this.adresseLivraison = adresseLivraison;
-        this.modeConsommation = modeConsommation;
-        this.etatCommande = etatCommande;
-        this.client = client;
-        this.zone = zone;
-    }
 
     public int getIdCommande() {
         return idCommande;
@@ -104,27 +91,21 @@ public class Commande {
         this.lignes = lignes;
     }
 
-    public Paiement getPaiement() {
-        return paiement;
-    }
-
-    public void setPaiement(Paiement paiement) {
-        this.paiement = paiement;
-    }
-
     public void ajouterLigne(LigneCommande ligne) {
-        this.lignes.add(ligne);
+        lignes.add(ligne);
     }
 
     public BigDecimal calculerTotal() {
-        BigDecimal somme = lignes.stream()
-                .map(LigneCommande::getSousTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal somme = BigDecimal.ZERO;
+        for (LigneCommande ligne : lignes) {
+            somme = somme.add(ligne.getSousTotal());
+        }
         if (modeConsommation == ModeConsommation.LIVRAISON && zone != null && zone.getPrixLivraison() != null) {
             somme = somme.add(zone.getPrixLivraison());
         }
-        this.total = somme;
+        total = somme;
         return somme;
     }
 }
+
 

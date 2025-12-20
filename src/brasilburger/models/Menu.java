@@ -11,16 +11,6 @@ public class Menu {
     private boolean actif;
     private List<Burger> burgers = new ArrayList<>();
 
-    public Menu() {
-    }
-
-    public Menu(int idMenu, String nom, String image, boolean actif) {
-        this.idMenu = idMenu;
-        this.nom = nom;
-        this.image = image;
-        this.actif = actif;
-    }
-
     public int getIdMenu() {
         return idMenu;
     }
@@ -62,9 +52,14 @@ public class Menu {
     }
 
     public BigDecimal getPrix() {
-        return burgers.stream()
-                .map(Burger::getPrix)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal total = BigDecimal.ZERO;
+        for (Burger burger : burgers) {
+            if (burger.getPrix() != null) {
+                total = total.add(burger.getPrix());
+            }
+        }
+        return total;
     }
 }
+
 

@@ -1,8 +1,9 @@
 package brasilburger.models;
 
+import brasilburger.models.enums.ModePaiement;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import brasilburger.models.enums.ModePaiement;
 
 public class Paiement {
     private int idPaiement;
@@ -10,17 +11,6 @@ public class Paiement {
     private BigDecimal montant;
     private ModePaiement modePaiement;
     private Commande commande;
-
-    public Paiement() {
-    }
-
-    public Paiement(int idPaiement, LocalDateTime datePaiement, BigDecimal montant, ModePaiement modePaiement, Commande commande) {
-        this.idPaiement = idPaiement;
-        this.datePaiement = datePaiement;
-        this.montant = montant;
-        this.modePaiement = modePaiement;
-        this.commande = commande;
-    }
 
     public int getIdPaiement() {
         return idPaiement;
@@ -62,4 +52,5 @@ public class Paiement {
         this.commande = commande;
     }
 }
+
 

@@ -8,18 +8,6 @@ public class Client {
     private String email;
     private String password;
 
-    public Client() {
-    }
-
-    public Client(int idClient, String nom, String prenom, String telephone, String email, String password) {
-        this.idClient = idClient;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.telephone = telephone;
-        this.email = email;
-        this.password = password;
-    }
-
     public int getIdClient() {
         return idClient;
     }
@@ -68,4 +56,3 @@ public class Client {
         this.password = password;
     }
 }
-

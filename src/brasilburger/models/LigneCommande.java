@@ -4,21 +4,11 @@ import java.math.BigDecimal;
 
 public class LigneCommande {
     private int idLigne;
+    private Commande commande;
     private int quantite;
     private Burger burger;
     private Menu menu;
     private Complement complement;
-
-    public LigneCommande() {
-    }
-
-    public LigneCommande(int idLigne, int quantite, Burger burger, Menu menu, Complement complement) {
-        this.idLigne = idLigne;
-        this.quantite = quantite;
-        this.burger = burger;
-        this.menu = menu;
-        this.complement = complement;
-    }
 
     public int getIdLigne() {
         return idLigne;
@@ -26,6 +16,14 @@ public class LigneCommande {
 
     public void setIdLigne(int idLigne) {
         this.idLigne = idLigne;
+    }
+
+    public Commande getCommande() {
+        return commande;
+    }
+
+    public void setCommande(Commande commande) {
+        this.commande = commande;
     }
 
     public int getQuantite() {
@@ -62,14 +60,15 @@ public class LigneCommande {
 
     public BigDecimal getSousTotal() {
         BigDecimal prix = BigDecimal.ZERO;
-        if (burger != null) {
+        if (burger != null && burger.getPrix() != null) {
             prix = burger.getPrix();
         } else if (menu != null) {
             prix = menu.getPrix();
-        } else if (complement != null) {
+        } else if (complement != null && complement.getPrix() != null) {
             prix = complement.getPrix();
         }
         return prix.multiply(BigDecimal.valueOf(quantite));
     }
 }
+
 
