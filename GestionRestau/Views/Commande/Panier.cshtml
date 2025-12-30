@@ -1,0 +1,192 @@
+@model BrasilBurger.Web.Models.ViewModels.PanierViewModel
+
+@{
+    ViewData["Title"] = "Mon Panier";
+}
+
+<h2><i class="fas fa-shopping-cart"></i> Mon Panier</h2>
+<hr />
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info text-center">
+        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+        <h4>@ViewBag.Message</h4>
+        <a asp-controller="Catalogue" asp-action="Index" class="btn btn-primary mt-3">
+            <i class="fas fa-utensils"></i> Découvrir notre catalogue
+        </a>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Articles dans votre panier</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var ligne in Model.Lignes)
+                    {
+                        <div class="row mb-3 pb-3 border-bottom">
+                            <div class="col-md-2">
+                                @if (!string.IsNullOrEmpty(ligne.ImageUrl))
+                                {
+                                    <img src="@ligne.ImageUrl" class="img-fluid rounded" alt="@ligne.NomProduit" />
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="height: 80px;">
+                                        <i class="fas fa-hamburger fa-2x"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-5">
+                                <h5>@ligne.NomProduit</h5>
+                                <p class="text-muted mb-0">
+                                    @switch (ligne.TypeProduit)
+                                    {
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.BURGER:
+                                            <span class="badge bg-danger">Burger</span>
+                                            break;
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.MENU:
+                                            <span class="badge bg-success">Menu</span>
+                                            break;
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.COMPLEMENT:
+                                            <span class="badge bg-warning text-dark">Complément</span>
+                                            break;
+                                    }
+                                </p>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p class="mb-0"><strong>Quantité</strong></p>
+                                <p class="fs-5">@ligne.Quantite</p>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p class="mb-0"><strong>Prix unitaire</strong></p>
+                                <p class="text-muted">@ligne.PrixUnitaire FCFA</p>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <p class="mb-0"><strong>Total</strong></p>
+                                <p class="text-danger fw-bold">@ligne.SousTotal FCFA</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-calculator"></i> Récapitulatif</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Sous-total :</span>
+                        <span class="fw-bold">@Model.SousTotal FCFA</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" id="fraisLivraisonDiv" style="display:none;">
+                        <span>Frais de livraison :</span>
+                        <span class="fw-bold text-info" id="fraisLivraison">0 FCFA</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <span class="fs-5"><strong>Total :</strong></span>
+                        <span class="fs-4 text-danger fw-bold" id="totalFinal">@Model.Total FCFA</span>
+                    </div>
+
+                    <form asp-action="ValiderPanier" method="post" class="mt-3">
+                        <div class="card mb-3">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0"><i class="fas fa-box"></i> Mode de consommation</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="modeConsommation" id="surPlace" value="SUR_PLACE" checked onchange="toggleLivraison()" />
+                                    <label class="form-check-label" for="surPlace">
+                                        <i class="fas fa-utensils text-success"></i> Sur place
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="modeConsommation" id="emporter" value="EMPORTE" onchange="toggleLivraison()" />
+                                    <label class="form-check-label" for="emporter">
+                                        <i class="fas fa-shopping-bag text-primary"></i> À emporter
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="modeConsommation" id="livraison" value="LIVRAISON" onchange="toggleLivraison()" />
+                                    <label class="form-check-label" for="livraison">
+                                        <i class="fas fa-truck text-danger"></i> Livraison
+                                    </label>
+                                </div>
+
+                                <div id="livraisonDetails" style="display:none;" class="mt-3">
+                                    <div class="mb-3">
+                                        <label for="adresseLivraison" class="form-label">Adresse de livraison</label>
+                                        <textarea class="form-control" id="adresseLivraison" name="adresseLivraison" rows="3" placeholder="Entrez votre adresse complète"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="zoneId" class="form-label">Zone de livraison</label>
+                                        <select class="form-select" id="zoneId" name="zoneId" onchange="updateFraisLivraison()">
+                                            <option value="">-- Sélectionnez une zone --</option>
+                                            @foreach (var zone in Model.ZonesDisponibles)
+                                            {
+                                                <option value="@zone.IdZone" data-prix="@zone.PrixLivraison">
+                                                    @zone.Nom (+@zone.PrixLivraison FCFA)
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Valider le panier
+                            </button>
+                            <a asp-action="Index" asp-controller="Catalogue" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Continuer mes achats
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function toggleLivraison() {
+            const livraison = document.getElementById('livraison').checked;
+            const livraisonDetails = document.getElementById('livraisonDetails');
+            const fraisDiv = document.getElementById('fraisLivraisonDiv');
+            
+            if (livraison) {
+                livraisonDetails.style.display = 'block';
+                fraisDiv.style.display = 'flex';
+            } else {
+                livraisonDetails.style.display = 'none';
+                fraisDiv.style.display = 'none';
+                updateTotal(0);
+            }
+        }
+
+        function updateFraisLivraison() {
+            const select = document.getElementById('zoneId');
+            const selectedOption = select.options[select.selectedIndex];
+            const prix = parseFloat(selectedOption.getAttribute('data-prix')) || 0;
+            
+            document.getElementById('fraisLivraison').textContent = prix.toLocaleString('fr-FR') + ' FCFA';
+            updateTotal(prix);
+        }
+
+        function updateTotal(fraisLivraison) {
+            const sousTotal = @Model.SousTotal;
+            const total = sousTotal + fraisLivraison;
+            document.getElementById('totalFinal').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+        }
+    </script>
+}

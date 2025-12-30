@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Accueil";
+}
+
+<div class="text-center">
+    <div class="jumbotron bg-danger text-white p-5 rounded mb-5">
+        <h1 class="display-3"><i class="fas fa-hamburger"></i> Bienvenue chez Brasil Burger</h1>
+        <p class="lead">Les meilleurs burgers de Dakar !</p>
+        <hr class="my-4 bg-white">
+        <p>Commandez en ligne et faites-vous livrer ou venez récupérer sur place.</p>
+        <a class="btn btn-warning btn-lg" asp-controller="Catalogue" asp-action="Index" role="button">
+            <i class="fas fa-utensils"></i> Découvrir notre menu
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-shopping-bag fa-3x text-primary mb-3"></i>
+                    <h4>À emporter</h4>
+                    <p>Commandez et récupérez votre burger en quelques minutes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-utensils fa-3x text-success mb-3"></i>
+                    <h4>Sur place</h4>
+                    <p>Dégustez dans notre restaurant avec une ambiance conviviale</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-truck fa-3x text-danger mb-3"></i>
+                    <h4>Livraison</h4>
+                    <p>Livraison rapide partout à Dakar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h2 class="mb-4">Nos Burgers Populaires</h2>
+        <div class="row">
+            @if (ViewBag.Burgers != null)
+            {
+                @foreach (var burger in ((IEnumerable<BrasilBurger.Web.Models.Entities.Burger>)ViewBag.Burgers).Take(3))
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            @if (!string.IsNullOrEmpty(burger.Image))
+                            {
+                                <img src="@burger.Image" class="card-img-top" alt="@burger.Nom" style="height: 200px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-hamburger fa-4x"></i>
+                                </div>
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@burger.Nom</h5>
+                                <p class="card-text text-danger fw-bold">@burger.Prix.ToString("N0") FCFA</p>
+                                <a asp-controller="Catalogue" asp-action="DetailsBurger" asp-route-id="@burger.IdBurger" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Voir détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

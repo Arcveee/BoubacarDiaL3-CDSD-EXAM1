@@ -1,0 +1,148 @@
+@model BrasilBurger.Web.Models.Entities.Commande
+
+@{
+    ViewData["Title"] = "Détails Commande";
+}
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <a asp-action="MesCommandes" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à mes commandes
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-receipt"></i> Récapitulatif de la commande</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Numéro de commande :</strong> CMD-@Model.IdClient-@(ViewBag.NumeroCommande ?? 1)</p>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-calendar"></i> Date :</strong><br>@Model.DateCommande.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-info-circle"></i> État :</strong><br>
+                            @switch (Model.EtatCommande)
+                            {
+                                case BrasilBurger.Web.Models.Enums.EtatCommande.EN_COURS:
+                                    <span class="badge bg-warning text-dark">En cours</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.EtatCommande.VALIDEE:
+                                    <span class="badge bg-info">Validée</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.EtatCommande.PREPAREE:
+                                    <span class="badge bg-secondary">Préparée</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.EtatCommande.TERMINEE:
+                                    <span class="badge bg-success">Terminée</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.EtatCommande.ANNULEE:
+                                    <span class="badge bg-danger">Annulée</span>
+                                    break;
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-box"></i> Mode :</strong><br>
+                            @switch (Model.ModeConsommation)
+                            {
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.SUR_PLACE:
+                                    <span class="badge bg-success">Sur place</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.EMPORTE:
+                                    <span class="badge bg-primary">À emporter</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.LIVRAISON:
+                                    <span class="badge bg-danger">Livraison</span>
+                                    break;
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                @if (Model.ModeConsommation == BrasilBurger.Web.Models.Enums.ModeConsommation.LIVRAISON)
+                {
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong><i class="fas fa-map-marker-alt"></i> Adresse :</strong> @Model.AdresseLivraison</p>
+                        <p class="mb-0"><strong><i class="fas fa-map"></i> Zone :</strong> @Model.Zone?.Nom</p>
+                    </div>
+                }
+
+                <hr>
+
+                <h5 class="mb-3"><strong>Articles commandés :</strong></h5>
+
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Produit</th>
+                            <th>Type</th>
+                            <th class="text-center">Quantité</th>
+                            <th class="text-end">Prix unitaire</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ligne in Model.LignesCommande)
+                        {
+                            var nomProduit = await ViewBag.CommandeService.GetNomProduitAsync(ligne);
+                            <tr>
+                                <td>@nomProduit</td>
+                                <td>
+                                    @switch (ligne.TypeProduit)
+                                    {
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.BURGER:
+                                            <span class="badge bg-danger">Burger</span>
+                                            break;
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.MENU:
+                                            <span class="badge bg-success">Menu</span>
+                                            break;
+                                        case BrasilBurger.Web.Models.Enums.TypeProduit.COMPLEMENT:
+                                            <span class="badge bg-warning text-dark">Complément</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-center">@ligne.Quantite</td>
+                                <td class="text-end">@((int)(ligne.SousTotal / ligne.Quantite)) FCFA</td>
+                                <td class="text-end fw-bold">@((int)ligne.SousTotal) FCFA</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <th colspan="4" class="text-end">Total :</th>
+                            <th class="text-end text-danger fs-5">@((int)Model.Total) FCFA</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                @if (Model.Paiement != null)
+                {
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <strong>Paiement effectué</strong>
+                        <p class="mb-0">Mode : 
+                            @switch (Model.Paiement.ModePaiement)
+                            {
+                                case BrasilBurger.Web.Models.Enums.ModePaiement.WAVE:
+                                    <strong>Wave</strong>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.ModePaiement.OM:
+                                    <strong>Orange Money</strong>
+                                    break;
+                            }
+                        </p>
+                        <p class="mb-0">Date : @Model.Paiement.DatePaiement.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
