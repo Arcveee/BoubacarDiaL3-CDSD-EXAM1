@@ -159,25 +159,36 @@ else
 
 @section Scripts {
     <script>
+        console.log('Script chargé');
+        
         function toggleLivraison() {
-            const livraison = document.getElementById('livraison').checked;
+            console.log('toggleLivraison appelé');
+            const livraison = document.getElementById('livraison');
             const livraisonDetails = document.getElementById('livraisonDetails');
             const fraisDiv = document.getElementById('fraisLivraisonDiv');
             const adresseField = document.getElementById('adresseLivraison');
             const zoneField = document.getElementById('zoneId');
             
-            if (livraison) {
-                livraisonDetails.style.display = 'block';
-                fraisDiv.style.display = 'flex';
-                adresseField.setAttribute('required', 'required');
-                zoneField.setAttribute('required', 'required');
+            console.log('Livraison checked:', livraison ? livraison.checked : 'element not found');
+            
+            if (livraison && livraison.checked) {
+                console.log('Affichage des champs de livraison');
+                if (livraisonDetails) livraisonDetails.style.display = 'block';
+                if (fraisDiv) fraisDiv.style.display = 'flex';
+                if (adresseField) adresseField.setAttribute('required', 'required');
+                if (zoneField) zoneField.setAttribute('required', 'required');
             } else {
-                livraisonDetails.style.display = 'none';
-                fraisDiv.style.display = 'none';
-                adresseField.removeAttribute('required');
-                zoneField.removeAttribute('required');
-                adresseField.value = '';
-                zoneField.value = '';
+                console.log('Masquage des champs de livraison');
+                if (livraisonDetails) livraisonDetails.style.display = 'none';
+                if (fraisDiv) fraisDiv.style.display = 'none';
+                if (adresseField) {
+                    adresseField.removeAttribute('required');
+                    adresseField.value = '';
+                }
+                if (zoneField) {
+                    zoneField.removeAttribute('required');
+                    zoneField.value = '';
+                }
                 updateTotal(0);
             }
         }
@@ -199,6 +210,7 @@ else
 
         // Initialiser l'état au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM chargé');
             toggleLivraison();
         });
     </script>
