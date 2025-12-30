@@ -203,7 +203,7 @@ else
         }
 
         function updateTotal(fraisLivraison) {
-            const sousTotal = @Model.SousTotal;
+            const sousTotal = @Model.SousTotal.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             const total = sousTotal + fraisLivraison;
             document.getElementById('totalFinal').textContent = total.toLocaleString('fr-FR') + ' FCFA';
         }
