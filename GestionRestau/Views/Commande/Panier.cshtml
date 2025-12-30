@@ -188,5 +188,10 @@ else
             const total = sousTotal + fraisLivraison;
             document.getElementById('totalFinal').textContent = total.toLocaleString('fr-FR') + ' FCFA';
         }
+
+        // Initialiser l'état au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleLivraison();
+        });
     </script>
 }
