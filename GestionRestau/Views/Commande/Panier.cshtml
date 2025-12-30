@@ -163,13 +163,21 @@ else
             const livraison = document.getElementById('livraison').checked;
             const livraisonDetails = document.getElementById('livraisonDetails');
             const fraisDiv = document.getElementById('fraisLivraisonDiv');
+            const adresseField = document.getElementById('adresseLivraison');
+            const zoneField = document.getElementById('zoneId');
             
             if (livraison) {
                 livraisonDetails.style.display = 'block';
                 fraisDiv.style.display = 'flex';
+                adresseField.setAttribute('required', 'required');
+                zoneField.setAttribute('required', 'required');
             } else {
                 livraisonDetails.style.display = 'none';
                 fraisDiv.style.display = 'none';
+                adresseField.removeAttribute('required');
+                zoneField.removeAttribute('required');
+                adresseField.value = '';
+                zoneField.value = '';
                 updateTotal(0);
             }
         }
