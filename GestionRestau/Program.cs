@@ -59,10 +59,10 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // app.UseHsts(); // Désactivé pour Render
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Désactivé pour Render (HTTP uniquement)
 app.UseStaticFiles();
 
 app.UseRouting();
