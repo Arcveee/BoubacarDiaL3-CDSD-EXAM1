@@ -1,7 +1,7 @@
 services:
   - type: web
     name: brasil-burger
-    env: php
+    runtime: php
     buildCommand: composer install --no-dev --optimize-autoloader && php bin/console cache:clear --env=prod
     startCommand: php -S 0.0.0.0:$PORT -t public
     envVars:
