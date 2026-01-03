@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Brasil Burger - Gestion{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍔</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        {% block stylesheets %}{% endblock %}
+        <style>
+            :root {
+                --brasil-red: #E74C3C;
+                --brasil-orange: #F39C12;
+                --brasil-green: #27AE60;
+                --brasil-dark: #2C3E50;
+            }
+            
+            .navbar-brand {
+                font-weight: bold;
+                color: var(--brasil-red) !important;
+            }
+            
+            .btn-brasil {
+                background-color: var(--brasil-red);
+                border-color: var(--brasil-red);
+                color: white;
+            }
+            
+            .btn-brasil:hover {
+                background-color: #c0392b;
+                border-color: #c0392b;
+                color: white;
+            }
+            
+            .card {
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            }
+            
+            .card.shadow-sm {
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+            }
+            
+            .bg-brasil-red { background-color: var(--brasil-red) !important; }
+            .bg-brasil-orange { background-color: var(--brasil-orange) !important; }
+            .bg-brasil-green { background-color: var(--brasil-green) !important; }
+            .bg-brasil-dark { background-color: var(--brasil-dark) !important; }
+            
+            .text-brasil-red { color: var(--brasil-red) !important; }
+            .text-brasil-orange { color: var(--brasil-orange) !important; }
+            .text-brasil-green { color: var(--brasil-green) !important; }
+            .text-brasil-dark { color: var(--brasil-dark) !important; }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-brasil-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_dashboard') }}">
+                    Brasil Burger
+                </a>
+                
+                {% if app.user %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_dashboard') }}">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_produit_index') }}">
+                                Produits
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_commande_index') }}">
+                                Commandes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_zone_index') }}">
+                                Zones
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ app.user.prenom }} {{ app.user.nom }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">
+                                    Déconnexion
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+
+        <main class="container mt-4">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

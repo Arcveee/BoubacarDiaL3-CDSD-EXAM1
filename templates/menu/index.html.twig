@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menus - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Menus</h1>
+    <a href="{{ path('app_menu_new') }}" class="btn btn-brasil">Nouveau Menu</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if menus %}
+            <ul class="list-group">
+                {% for m in menus %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ m.nom }}</strong>
+                            <div><small class="text-muted">Prix estimé: {{ m.getPrix()|number_format(0, '', '') }} FCFA</small></div>
+                        </div>
+                        <div>
+                            <a href="{{ path('app_menu_show', {'id': m.id}) }}" class="btn btn-outline-primary btn-sm">Voir</a>
+                            <a href="{{ path('app_menu_edit', {'id': m.id}) }}" class="btn btn-outline-secondary btn-sm">Éditer</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info">Aucun menu trouvé.</div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

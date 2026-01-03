@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Éditer Menu - Brasil Burger{% endblock %}
+
+{% block body %}
+<h1>Éditer Menu</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.image) }}
+    {{ form_row(form.actif) }}
+    {{ form_row(form.burgers) }}
+    <button class="btn btn-brasil">Enregistrer</button>
+{{ form_end(form) }}
+
+{% endblock %}
