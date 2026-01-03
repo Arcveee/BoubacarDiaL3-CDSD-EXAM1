@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Zone - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-plus me-2"></i>Nouvelle Zone de Livraison</h1>
+    <a href="{{ path('app_zone_index') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Retour
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom de la zone *</label>
+                                <input type="text" class="form-control" id="nom" name="nom" required placeholder="Ex: Centre-ville">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="prix_livraison" class="form-label">Prix livraison (FCFA) *</label>
+                                <input type="number" step="1" class="form-control" id="prix_livraison" name="prix_livraison" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quartiers" class="form-label">Quartiers (séparés par des virgules)</label>
+                        <textarea class="form-control" id="quartiers" name="quartiers" rows="3" placeholder="Plateau, Cocody, Marcory, Treichville"></textarea>
+                        <div class="form-text">Listez les quartiers couverts par cette zone, séparés par des virgules.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="actif" name="actif" value="1" checked>
+                            <label class="form-check-label" for="actif">
+                                Zone active
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ path('app_zone_index') }}" class="btn btn-outline-secondary">Annuler</a>
+                        <button type="submit" class="btn btn-brasil">
+                            <i class="fas fa-save me-1"></i>Créer la zone
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {# Help panel removed per request #}
+</div>
+
+{% endblock %}

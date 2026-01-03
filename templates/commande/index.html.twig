@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Commandes - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des Commandes</h1>
+</div>
+
+<!-- Filtres -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="etat" class="form-label">État</label>
+                <select class="form-select" id="etat" name="etat">
+                    <option value="">Tous les états</option>
+                    <option value="EN_COURS" {{ filters.etat == 'EN_COURS' ? 'selected' : '' }}>En cours</option>
+                    <option value="VALIDEE" {{ filters.etat == 'VALIDEE' ? 'selected' : '' }}>Validée</option>
+                    <option value="PREPAREE" {{ filters.etat == 'PREPAREE' ? 'selected' : '' }}>Préparée</option>
+                    <option value="TERMINEE" {{ filters.etat == 'TERMINEE' ? 'selected' : '' }}>Terminée</option>
+                    <option value="ANNULEE" {{ filters.etat == 'ANNULEE' ? 'selected' : '' }}>Annulée</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="client" class="form-label">Client</label>
+                <input type="text" class="form-control" id="client" name="client" value="{{ filters.client }}" placeholder="Nom du client">
+            </div>
+            <div class="col-md-3">
+                <label for="zone" class="form-label">Zone</label>
+                <select class="form-select" id="zone" name="zone">
+                    <option value="">Toutes les zones</option>
+                    {% for z in zones %}
+                        <option value="{{ z.id }}" {{ filters.zone == z.id ? 'selected' : '' }}>{{ z.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-brasil">
+                    Filtrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des commandes -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if commandes %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>N° Commande</th>
+                            <th>Client</th>
+                            <th>Montant</th>
+                            <th>Zone</th>
+                            <th>État</th>
+                            <th>Mode</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for commande in commandes %}
+                            <tr>
+                                <td>
+                                    <strong>#{{ commande.id }}</strong>
+                                </td>
+                                <td>
+                                    {% if commande.client %}
+                                        <strong>{{ commande.client.prenom }} {{ commande.client.nom }}</strong><br>
+                                        <small class="text-muted">{{ commande.client.telephone }}</small>
+                                    {% else %}
+                                        <span class="text-muted">-</span><br>
+                                        <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-success">{{ commande.montantTotal|number_format(0, '', '') }} FCFA</span>
+                                </td>
+                                <td>
+                                    {% if commande.zone %}
+                                        <span class="badge bg-info">{{ commande.zone.nom }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge {{ commande.etatBadgeClass }}">
+                                        {{ commande.etat }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small>{{ commande.modeConsommation }}</small>
+                                </td>
+                                <td>
+                                    {{ commande.createdAt|date('d/m/Y') }}<br>
+                                    <small class="text-muted">{{ commande.createdAt|date('H:i') }}</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('app_commande_show', {'id': commande.id}) }}" class="btn btn-outline-primary btn-sm">
+                                            Voir
+                                        </a>
+                                        {% if commande.canBeModified and is_granted('ROLE_ADMIN') %}
+                                            <a href="{{ path('app_commande_change_etat_form', {'id': commande.id}) }}" class="btn btn-outline-warning btn-sm">
+                                                Modifier
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {# Change-state modal removed: users go to dedicated change page instead #}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                Aucune commande trouvée avec ces critères.
+            </div>
+        {% endif %}
+                
+                {# Pagination controls #}
+                {% if pagination is defined and pagination.totalPages > 1 %}
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {{ pagination.page <= 1 ? 'disabled' : '' }}">
+                            <a class="page-link" href="?page={{ pagination.page - 1 }}&etat={{ filters.etat }}&zone={{ filters.zone }}&client={{ filters.client }}">Précédent</a>
+                        </li>
+                        {% for p in 1..pagination.totalPages %}
+                            <li class="page-item {{ p == pagination.page ? 'active' : '' }}"><a class="page-link" href="?page={{ p }}&etat={{ filters.etat }}&zone={{ filters.zone }}&client={{ filters.client }}">{{ p }}</a></li>
+                        {% endfor %}
+                        <li class="page-item {{ pagination.page >= pagination.totalPages ? 'disabled' : '' }}">
+                            <a class="page-link" href="?page={{ pagination.page + 1 }}&etat={{ filters.etat }}&zone={{ filters.zone }}&client={{ filters.client }}">Suivant</a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+    </div>
+</div>
+
+{% endblock %}

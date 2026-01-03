@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande #{{ commande.id }} - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-shopping-cart me-2"></i>Commande #{{ commande.id }}</h1>
+    <div>
+        <span class="badge {{ commande.etatBadgeClass }} fs-6 me-2">{{ commande.etat }}</span>
+        <a href="{{ path('app_commande_index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informations client -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Informations Client</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Nom :</strong></div>
+                    <div class="col-sm-8">
+                        {% if commande.client %}
+                            {{ commande.client.prenom }} {{ commande.client.nom }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Téléphone :</strong></div>
+                    <div class="col-sm-8">{{ commande.client ? commande.client.telephone : '-' }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Mode :</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-{{ commande.modeConsommation == 'LIVRAISON' ? 'warning' : 'info' }}">
+                            {{ commande.modeConsommation }}
+                        </span>
+                    </div>
+                </div>
+                {% if commande.adresseLivraison %}
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Adresse :</strong></div>
+                    <div class="col-sm-8">{{ commande.adresseLivraison }}</div>
+                </div>
+                {% endif %}
+                {% if commande.zone %}
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Zone :</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-info">{{ commande.zone.nom }}</span>
+                        <small class="text-muted">({{ commande.zone.prixLivraison|number_format(0, '', '') }} FCFA)</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations commande -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Détails Commande</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Date :</strong></div>
+                    <div class="col-sm-8">{{ commande.createdAt|date('d/m/Y à H:i') }}</div>
+                </div>
+                {% if commande.updatedAt %}
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Modifiée :</strong></div>
+                    <div class="col-sm-8">{{ commande.updatedAt|date('d/m/Y à H:i') }}</div>
+                </div>
+                {% endif %}
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Paiement :</strong></div>
+                    <div class="col-sm-8">
+                        {% if paye %}
+                            <span class="badge bg-success">Payé</span>
+                            {% if mode_paiement %}
+                                <span class="badge bg-secondary">{{ mode_paiement }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-danger">Non payé</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4"><strong>Total :</strong></div>
+                        <div class="col-sm-8">
+                        <span class="h4 text-success">{{ commande.montantTotal|number_format(0, '', '') }} FCFA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Produits commandés -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-brasil-orange text-white">
+        <h5 class="mb-0"><i class="fas fa-utensils me-2"></i>Produits Commandés</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Type</th>
+                        <th>Prix unitaire</th>
+                        <th>Quantité</th>
+                        <th>Sous-total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in commande.commandeItems %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.typeProduit }} #{{ item.idProduit }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ item.typeProduit == 'BURGER' ? 'danger' : (item.typeProduit == 'MENU' ? 'warning' : 'info') }}">
+                                    {{ item.typeProduit }}
+                                </span>
+                            </td>
+                            <td>{{ item.prixUnitaire|number_format(0, '', '') }} FCFA</td>
+                            <td>{{ item.quantite }}</td>
+                            <td><strong>{{ item.sousTotal|number_format(0, '', '') }} FCFA</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-success">
+                        <th colspan="4">Total</th>
+                        <th>{{ commande.montantTotal|number_format(0, '', '') }} FCFA</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Actions -->
+{% if commande.canBeModified %}
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Actions</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h6>Changer l'état</h6>
+                <form method="post" action="{{ path('app_commande_change_etat', {'id': commande.id}) }}" class="d-flex gap-2">
+                    <select class="form-select" name="etat" required>
+                        <option value="">Sélectionner un état</option>
+                        <option value="EN_COURS" {{ commande.etat == 'EN_COURS' ? 'selected' : '' }}>EN_COURS</option>
+                        <option value="VALIDEE" {{ commande.etat == 'VALIDEE' ? 'selected' : '' }}>VALIDEE</option>
+                        <option value="PREPAREE" {{ commande.etat == 'PREPAREE' ? 'selected' : '' }}>PREPAREE</option>
+                        <option value="TERMINEE" {{ commande.etat == 'TERMINEE' ? 'selected' : '' }}>TERMINEE</option>
+                    </select>
+                    <button type="submit" class="btn btn-brasil">
+                        <i class="fas fa-sync me-1"></i>Changer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex gap-2">
+            <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Annuler cette commande ?')">
+                    <i class="fas fa-times me-1"></i>Annuler la commande
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

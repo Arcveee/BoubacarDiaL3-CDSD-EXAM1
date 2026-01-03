@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Complément - Brasil Burger{% endblock %}
+
+{% block body %}
+<h1>Nouveau Complément</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prix) }}
+    {{ form_row(form.image) }}
+    {{ form_row(form.actif) }}
+    <button class="btn btn-brasil">Créer</button>
+{{ form_end(form) }}
+
+{% endblock %}
