@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ zone.nom }} - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-edit me-2"></i>Modifier {{ zone.nom }}</h1>
+    <a href="{{ path('app_zone_show', {'id': zone.id}) }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Retour
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom de la zone *</label>
+                                <input type="text" class="form-control" id="nom" name="nom" value="{{ zone.nom }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="prix_livraison" class="form-label">Prix livraison (FCFA) *</label>
+                                <input type="number" step="1" class="form-control" id="prix_livraison" name="prix_livraison" value="{{ zone.prixLivraison }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quartiers" class="form-label">Quartiers (séparés par des virgules)</label>
+                        <textarea class="form-control" id="quartiers" name="quartiers" rows="3">{{ zone.quartiersArray|join(', ') }}</textarea>
+                        <div class="form-text">Listez les quartiers couverts par cette zone, séparés par des virgules.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="actif" name="actif" value="1" {{ zone.actif ? 'checked' : '' }}>
+                            <label class="form-check-label" for="actif">
+                                Zone active
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ path('app_zone_show', {'id': zone.id}) }}" class="btn btn-outline-secondary">Annuler</a>
+                        <button type="submit" class="btn btn-brasil">
+                            <i class="fas fa-save me-1"></i>Sauvegarder
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="fas fa-eye me-1"></i>Aperçu</h6>
+            </div>
+            <div class="card-body">
+                <h6>{{ zone.nom }}</h6>
+                <div class="h5 text-brasil-green">{{ zone.prixLivraison|number_format(0, '', '') }} FCFA</div>
+                
+                {% if zone.quartiersArray %}
+                    <div class="mt-3">
+                        <small class="text-muted">Quartiers :</small>
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                            {% for quartier in zone.quartiersArray %}
+                                <span class="badge bg-light text-dark">{{ quartier }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <span class="badge {{ zone.actif ? 'bg-success' : 'bg-secondary' }}">
+                        {{ zone.actif ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
