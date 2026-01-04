@@ -1,0 +1,160 @@
+:root {
+  --brasil-red: #E74C3C;
+  --brasil-orange: #F39C12;
+  --brasil-green: #27AE60;
+  --brasil-dark: #2C3E50;
+}
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15)!important;
+}
+
+.btn-brasil {
+  background-color: var(--brasil-red);
+  border-color: var(--brasil-red);
+  color: white;
+}
+
+.btn-brasil:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+  color: white;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+.badge-brasil {
+  background-color: var(--brasil-red);
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card-header {
+  border-radius: 10px 10px 0 0 !important;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.alert {
+  animation: slideInDown 0.5s ease-out;
+}
+
+.payment-option {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-width: 2px;
+}
+
+.payment-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.payment-option.selected {
+  border-width: 3px;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+    
+  h1 {
+    font-size: 1.8rem;
+  }
+    
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.table-responsive {
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+:-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+background: var(--brasil-orange);
+border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--brasil-red);
+}
+.jumbotron {
+background: linear-gradient(135deg, var(--brasil-red) 0%, var(--brasil-orange) 100%);
+}
+.timeline-step {
+position: relative;
+padding-left: 40px;
+margin-bottom: 20px;
+}
+.timeline-step::before {
+content: '';
+position: absolute;
+left: 10px;
+top: 0;
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: #ddd;
+border: 3px solid #fff;
+box-shadow: 0 0 0 2px #ddd;
+}
+.timeline-step.active::before {
+background: var(--brasil-green);
+box-shadow: 0 0 0 2px var(--brasil-green);
+}
+
+@media print {
+.no-print {
+display: none !important;
+}
+}

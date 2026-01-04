@@ -1,0 +1,124 @@
+@model BrasilBurger.Web.Models.Entities.Commande
+
+@{
+    ViewData["Title"] = "Paiement";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="fas fa-credit-card"></i> Paiement</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Veuillez choisir votre mode de paiement pour finaliser votre commande.
+                </div>
+
+                <div class="card mb-4 border-primary">
+                    <div class="card-header bg-light">
+                        <h5><i class="fas fa-receipt"></i> Récapitulatif de la commande</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Commande N° :</strong> @Model.IdCommande</p>
+                        <p><strong>Date :</strong> @Model.DateCommande.ToString("dd/MM/yyyy HH:mm")</p>
+                        <p><strong>Mode :</strong>
+                            @switch (Model.ModeConsommation)
+                            {
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.SUR_PLACE:
+                                    <span>Sur place</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.EMPORTE:
+                                    <span>À emporter</span>
+                                    break;
+                                case BrasilBurger.Web.Models.Enums.ModeConsommation.LIVRAISON:
+                                    <span>Livraison</span>
+                                    break;
+                            }
+                        </p>
+                        @if (Model.ModeConsommation == BrasilBurger.Web.Models.Enums.ModeConsommation.LIVRAISON)
+                        {
+                            <p><strong>Adresse :</strong> @Model.AdresseLivraison</p>
+                            <p><strong>Zone :</strong> @Model.Zone?.Nom</p>
+                        }
+                        <hr />
+                        <h4 class="text-danger"><strong>Total à payer : @((int)Model.Total) FCFA</strong></h4>
+                    </div>
+                </div>
+
+                <form asp-controller="Commande" asp-action="EffectuerPaiement" method="post">
+                    <input type="hidden" name="commandeId" value="@Model.IdCommande" />
+
+                    <h5 class="mb-3">Choisissez votre mode de paiement :</h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-warning h-100 payment-option" onclick="selectPayment('wave', this)">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-mobile-alt fa-4x text-warning mb-3"></i>
+                                    <h4>Wave</h4>
+                                    <div class="form-check d-flex justify-content-center">
+                                        <input class="form-check-input" type="radio" name="modePaiement" id="wave" value="0" required />
+                                        <label class="form-check-label ms-2" for="wave">
+                                            Payer avec Wave
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-danger h-100 payment-option" onclick="selectPayment('om', this)">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-mobile-alt fa-4x text-danger mb-3"></i>
+                                    <h4>Orange Money</h4>
+                                    <div class="form-check d-flex justify-content-center">
+                                        <input class="form-check-input" type="radio" name="modePaiement" id="om" value="1" required />
+                                        <label class="form-check-label ms-2" for="om">
+                                            Payer avec OM
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle"></i> Confirmer le paiement
+                        </button>
+                        <a asp-action="Panier" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour au panier
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-option {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .payment-option:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    }
+    .payment-option.selected {
+        border-width: 3px;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function selectPayment(type, element) {
+            document.querySelectorAll('.payment-option').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            document.getElementById(type).checked = true;
+        }
+    </script>
+}
