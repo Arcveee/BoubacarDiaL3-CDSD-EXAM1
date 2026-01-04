@@ -1,9 +1,9 @@
-/.idea/
-/.vscode/
-/out/
-/bin/
-*.class
-*.iml
 target/
-
-
+.vscode/
+.settings/
+.classpath
+.project
+*.class
+*.jar
+*.log
+.DS_Store
