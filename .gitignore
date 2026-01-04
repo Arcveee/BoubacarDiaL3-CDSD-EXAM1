@@ -1,8 +1,0 @@
-Java/target/
-Java/.vscode/
-Java/.settings/
-Java/.classpath
-Java/.project
-*.class
-*.log
-.DS_Store
